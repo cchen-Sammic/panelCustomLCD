@@ -255,13 +255,13 @@ void controlGUI::mostrarLCD(QString tipo, bool mostrar){
         ui->icon_s3->setVisible(!mostrar);
         ui->icon_mbar->setVisible(!mostrar);
         ui->valor_mbar->setVisible(!mostrar);
-        ui->valor_gas->setVisible(!mostrar); 
+        ui->valor_gas->setVisible(!mostrar);
         ui->valor_taire->setVisible(!mostrar);
         ui->valor_tsellar->setVisible(!mostrar);
         ui->valor_tvac->setVisible(!mostrar);
         ui->valor_vac->setVisible(!mostrar);
         ui->valor_central->setVisible(!mostrar);
-//        ui->valor_nombre->setText("sammic");
+        //        ui->valor_nombre->setText("sammic");
         ui->valor_prog->setVisible(mostrar);
         ui->valor_nombre->setVisible(mostrar);
         ui->icon_printer->setVisible(mostrar);
@@ -445,7 +445,7 @@ void controlGUI::mostrarBoton(QString tipo, bool mostrar){
 }
 
 void controlGUI::set_config(){
-//    qDebug()<<"en config-   parametro estado:"<<estado;
+    //    qDebug()<<"en config-   parametro estado:"<<estado;
     if(estado=="setProg" || estado=="setProgVAC" || estado=="setProgPaso"){
         if(ui->boton_conf->isChecked()){
             estadoAnterior = estado;
@@ -455,7 +455,7 @@ void controlGUI::set_config(){
             mostrarBoton("todoSET",false);
             mostrarLCD(estado,true);
             ui->valor_nombre->setText("25.02.2015");
-//            botonParpadear->start(800);
+            //            botonParpadear->start(800);
             if(!printerON){ //si está apagada
                 qDebug()<<"configuracion de impresora activada:"<<printerON;
                 estado="setPrinter";
@@ -468,9 +468,9 @@ void controlGUI::set_config(){
                 qDebug()<<"configuracion de impresora activada:"<<printerON;
                 estado="setCaducidad";
                 LCDparpadear->start(400);
-//                ui->icon_caducidad->setVisible(printerON);
-//                ui->icon_temperatura->setVisible(printerON);
-//                ui->icon_ticket->setVisible(printerON);
+                //                ui->icon_caducidad->setVisible(printerON);
+                //                ui->icon_temperatura->setVisible(printerON);
+                //                ui->icon_ticket->setVisible(printerON);
             }
         }
     }
@@ -586,6 +586,7 @@ void controlGUI::set_botonArriba(){
 }
 void controlGUI::set_ok(){
     qDebug()<<"boton pulsado: OK   estado actual:"<<estado;
+    ///actualizar valor a mostrar
     ui->valor_nombre->setText("sammic");
     if(estado=="setValorVAC"){
         botonParpadear->stop();
@@ -618,12 +619,89 @@ void controlGUI::set_ok(){
         ui->valor_taire->setText(ui->valor_central->text());
     }
 
+    if(estado=="enVAC"){
+        enPausa = !enPausa; //el primer enPausa convertir a true
+        qDebug()<<"Funcion SET_OK \t\tenvasadora en:"<<estado<<"  pausa pulsado:"<<enPausa;
+        if(enPausa== true){
+            ui->icon_pausa->setVisible(true);
+            LCDparpadear->start(400);
+            updateGestionSistema(estado,"pausa");
+        }
+        else if(enPausa == false){
+            ui->icon_pausa->setVisible(false);
+            ui->valor_central->setVisible(true);
+            LCDparpadear->stop();
+            updateGestionSistema(estado,"marcha");
+        }
+        else{
+            if(progNum==0){estado = "setProg";}
+            else if(progNum==1){estado = "setProg";}
+            else if(progNum==2){estado = "setProg";}
+            else if(progNum==3){estado = "setProgVAC";}
+            else if(progNum==4){estado = "setProgPaso";}
+        }
+    }
+    else{ ///estado de programa
+        if(true){///estado de programa
+            if(progNum==0){
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
+                ui->valor_vac->setNum(prog01[0]);
+                ui->valor_tvac->setNum(prog01[1]);
+                ui->valor_gas->setNum(prog01[2]);
+                ui->valor_tsellar->setNum(prog01[3]);
+                ui->valor_taire->setNum(prog01[4]);
+            }
+            else if(progNum==1){
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
+                ui->valor_vac->setNum(prog02[0]);
+                ui->valor_tvac->setNum(prog02[1]);
+                ui->valor_gas->setNum(prog02[2]);
+                ui->valor_tsellar->setNum(prog02[3]);
+                ui->valor_taire->setNum(prog02[4]);
+            }
+            else if(progNum==2){
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
+                ui->valor_vac->setNum(prog03[0]);
+                ui->valor_tvac->setNum(prog03[1]);
+                ui->valor_gas->setNum(prog03[2]);
+                ui->valor_tsellar->setNum(prog03[3]);
+                ui->valor_taire->setNum(prog03[4]);
+            }
+            else if(progNum==3){
+                estado="setProgVAC";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
+                ui->valor_vac->setNum(progVAC[0]);
+                ui->valor_tvac->setNum(progVAC[1]);
+                ui->valor_gas->setNum(progVAC[2]);
+                ui->valor_tsellar->setNum(progVAC[3]);
+                ui->valor_taire->setNum(progVAC[4]);
+            }
+            else if(progNum==4){
+                estado="setProgPaso";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
+                ui->valor_vac->setNum(progPaso[0]);
+                ui->valor_tvac->setNum(progPaso[1]);
+                ui->valor_gas->setNum(progPaso[2]);
+                ui->valor_tsellar->setNum(progPaso[3]);
+                ui->valor_taire->setNum(progPaso[4]);
+            }
+        }
+    }
+
     if(desdeOtroSET==false){
         updateGestionSistema(estado,"ok");
     }
-    else if(desdeOtroSET==true){
-        qDebug()<<"\t->Ok por boton set";
+     else if(desdeOtroSET==true){
         desdeOtroSET=false;
+        qDebug()<<"\t->Ok por boton set    variable desdeOtroSET:"<<desdeOtroSET;
         if(setPulsado_2=="botonVAC"){
             ui->boton_vac->click();
         }
@@ -642,28 +720,6 @@ void controlGUI::set_ok(){
         else if(setPulsado_2=="botonBajarTapa"){
             ui->boton_envasadora->setChecked(false);
             ui->boton_envasadora->click();
-        }
-    }
-    if(estado=="enVAC"){
-        enPausa = !enPausa; //el primer enPausa convertir a true
-        qDebug()<<"envasadora en:"<<estado<<"  pausa pulsado:"<<enPausa;
-        if(enPausa== true){
-            ui->icon_pausa->setVisible(true);
-            LCDparpadear->start(400);
-            updateGestionSistema(estado,"pausa");
-        }
-        else if(enPausa == false){
-            ui->icon_pausa->setVisible(false);
-            ui->valor_central->setVisible(true);
-            LCDparpadear->stop();
-            updateGestionSistema(estado,"marcha");
-        }
-        else{
-            if(progNum==0){estado = "setProg";}
-            else if(progNum==1){estado = "setProg";}
-            else if(progNum==2){estado = "setProg";}
-            else if(progNum==3){estado = "setProgVAC";}
-            else if(progNum==4){estado = "setProgPaso";}
         }
     }
 }
@@ -848,15 +904,20 @@ void controlGUI::alimentacionGeneral(){
         ///////////////////////////////
     }
     else if(!ui->boton_interruptor->isChecked()){ ///APAGAR MAQUINA
-        //        qApp->exit();
-        ui->boton_envasadora->setIcon(QIcon(":/boton/imagen/envasadora abiertaOFF.png"));
-        mostrarBoton("todo",false);
-        mostrarLCD("reinicio",true);
-        m_currentRootObject->setProperty("valorCirExterior", 100);
-        m_currentRootObject->setProperty("valorCirInterior", 0);
-        horasOil = (QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(3)).toInt();
-        int incrMbarInicial =(QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(2)).toInt();
-        mbarActual = 910+ incrMbarInicial;
+        bool apagar =true;
+        if(apagar){
+            qApp->exit();
+        }
+        else{
+            ui->boton_envasadora->setIcon(QIcon(":/boton/imagen/envasadora abiertaOFF.png"));
+            mostrarBoton("todo",false);
+            mostrarLCD("reinicio",true);
+            m_currentRootObject->setProperty("valorCirExterior", 100);
+            m_currentRootObject->setProperty("valorCirInterior", 0);
+            horasOil = (QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(3)).toInt();
+            int incrMbarInicial =(QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(2)).toInt();
+            mbarActual = 910+ incrMbarInicial;
+        }
 
     }
 }
@@ -957,23 +1018,22 @@ void controlGUI::estadoEncendiendo(){
 }
 
 void controlGUI::start_ciclo(){
-    qDebug()<<"iniciar ciclo"<<ui->boton_envasadora->isChecked();
+    qDebug()<<"iniciar ciclo"<<ui->boton_envasadora->isChecked(); ///Iniciar Ciclo
     if(ui->boton_envasadora->isChecked()){
         if(estado=="setProg" || estado=="setProgVAC" || estado=="setProgPaso"){
-            qDebug()<<"Ciclo para el programa:"<<estado;
+            qDebug()<<"Start Ciclo para el programa:"<<estado;
             ui->boton_envasadora->setIcon(QIcon(":/boton/imagen/envasadora cerrado.png"));
             estado="enVAC";
             gestionEstadoCiclo(estado);
         }
-        else {
-            if(estado =="setValorVAC" || estado =="setValorGas" || estado == "setValorSellar" || estado =="setValorVACplus"){
-                desdeOtroSET = true;
-                setPulsado_2 = "botonBajarTapa";
-                ui->boton_ok->click();
-            }
+        else if(estado =="setValorVAC" || estado =="setValorGas" || estado == "setValorSellar" || estado =="setValorVACplus"||estado =="setValorAire") {
+            desdeOtroSET = true;
+            setPulsado_2 = "botonBajarTapa";
+            ui->boton_ok->click();
         }
+
     }
-    else if(!ui->boton_envasadora->isChecked()){
+    else if(!ui->boton_envasadora->isChecked()){ ///Fin Ciclo
         if(estado =="finCiclo"){
             ui->boton_envasadora->setIcon(QIcon(":/boton/imagen/envasadora abiertaON.png"));
             ui->valor_mbar->setNum(mbarActual);
@@ -1227,7 +1287,7 @@ void controlGUI::enVACplusCiclo(){
 
 void controlGUI::updateGestionSistema(QString l_estado, QString accion){
     qDebug()<<"[*] updateGestionSitema - tipoProg:"<<tipoProg<<"   l_estado:"<<l_estado<<" accion:"<<accion;
-   ///Acción STOP
+    ///Acción STOP
     if(accion=="stop"){
         enStop= true;
         ui->valor_taire->setNum(3);
@@ -1304,9 +1364,9 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
         }
         if(true){
             if(progNum==0){
-                l_estado="setProg";
-                mostrarLCD(l_estado,true);
-                mostrarBoton(l_estado,true);
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
                 ui->valor_vac->setNum(prog01[0]);
                 ui->valor_tvac->setNum(prog01[1]);
                 ui->valor_gas->setNum(prog01[2]);
@@ -1314,9 +1374,9 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 ui->valor_taire->setNum(prog01[4]);
             }
             else if(progNum==1){
-                l_estado="setProg";
-                mostrarLCD(l_estado,true);
-                mostrarBoton(l_estado,true);
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
                 ui->valor_vac->setNum(prog02[0]);
                 ui->valor_tvac->setNum(prog02[1]);
                 ui->valor_gas->setNum(prog02[2]);
@@ -1324,9 +1384,9 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 ui->valor_taire->setNum(prog02[4]);
             }
             else if(progNum==2){
-                l_estado="setProg";
-                mostrarLCD(l_estado,true);
-                mostrarBoton(l_estado,true);
+                estado="setProg";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
                 ui->valor_vac->setNum(prog03[0]);
                 ui->valor_tvac->setNum(prog03[1]);
                 ui->valor_gas->setNum(prog03[2]);
@@ -1334,9 +1394,9 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 ui->valor_taire->setNum(prog03[4]);
             }
             else if(progNum==3){
-                l_estado="setProgVAC";
-                mostrarLCD(l_estado,true);
-                mostrarBoton(l_estado,true);
+                estado="setProgVAC";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
                 ui->valor_vac->setNum(progVAC[0]);
                 ui->valor_tvac->setNum(progVAC[1]);
                 ui->valor_gas->setNum(progVAC[2]);
@@ -1344,9 +1404,9 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 ui->valor_taire->setNum(progVAC[4]);
             }
             else if(progNum==4){
-                l_estado="setProgPaso";
-                mostrarLCD(l_estado,true);
-                mostrarBoton(l_estado,true);
+                estado="setProgPaso";
+                mostrarLCD(estado,true);
+                mostrarBoton(estado,true);
                 ui->valor_vac->setNum(progPaso[0]);
                 ui->valor_tvac->setNum(progPaso[1]);
                 ui->valor_gas->setNum(progPaso[2]);
@@ -1521,8 +1581,8 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 estado="setTemperatura";
             }
             else if(l_estado=="setTemperatura"){
-                    ui->icon_temperatura->setVisible(true);
-                    estado="setPrinter";
+                ui->icon_temperatura->setVisible(true);
+                estado="setPrinter";
             }
             else if(l_estado=="setPrinter"){
                 ui->icon_printer->setVisible(true);
@@ -1539,8 +1599,8 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 estado="setTemperatura";
             }
             else if(l_estado=="setTemperatura"){
-                    ui->icon_temperatura->setVisible(true);
-                    estado="setTicket";
+                ui->icon_temperatura->setVisible(true);
+                estado="setTicket";
             }
             else if(l_estado=="setTicket"){
                 ui->icon_ticket->setVisible(true);
