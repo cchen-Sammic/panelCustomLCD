@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/widget">
+        <file>dial.qml</file>
+    </qresource>
+    <qresource prefix="/icono">
+        <file>imagen/panelUsuario.png</file>
+        <file>imagen/caducidad.png</file>
+        <file>imagen/etiqueta.png</file>
+        <file>imagen/oil.png</file>
+        <file>imagen/oil_dry.png</file>
+        <file>imagen/printer.png</file>
+        <file>imagen/temperatura.png</file>
+        <file>imagen/VAC.png</file>
+        <file>imagen/burbuja.png</file>
+        <file>imagen/paso.png</file>
+        <file>imagen/pause.png</file>
+        <file>imagen/burbuja 2.png</file>
+        <file>imagen/burbuja 3.png</file>
+        <file>imagen/oil_dry 2.png</file>
+    </qresource>
+    <qresource prefix="/boton">
+        <file>imagen/boton_abajo.png</file>
+        <file>imagen/boton_arriba.png</file>
+        <file>imagen/boton_conf.png</file>
+        <file>imagen/boton_ok.png</file>
+        <file>imagen/boton_prog.png</file>
+        <file>imagen/boton_stop.png</file>
+        <file>imagen/boton_abajo 2.png</file>
+        <file>imagen/boton_aire.png</file>
+        <file>imagen/boton_arriba 2.png</file>
+        <file>imagen/boton_gas.png</file>
+        <file>imagen/boton_sellar.png</file>
+        <file>imagen/boton_vac.png</file>
+        <file>imagen/boton_vacPlus.png</file>
+        <file>imagen/interruptor.png</file>
+        <file>imagen/envasadora abierta.png</file>
+        <file>imagen/boton_ok 2.png</file>
+        <file>imagen/boton_stop 2.png</file>
+        <file>imagen/envasadora abiertaOFF.png</file>
+        <file>imagen/envasadora abiertaON.png</file>
+        <file>imagen/envasadora cerrado.png</file>
+    </qresource>
+</RCC>
