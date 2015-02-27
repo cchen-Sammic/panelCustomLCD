@@ -34,6 +34,7 @@ private:
     QString estado;
     QString estadoAnterior;
     QString tipoProg;
+    QString tipoProg_anterior;
     QString setPulsado_2;
     QList<QString> progEnvasadora;
     QList<float> prog01;
@@ -57,11 +58,14 @@ private:
     int t_sellar;
     int t_aire;
     int progNumNormal;
+    bool setPrinter;
 
     int incr_mbarAire;
     bool desdeOtroSET;
     bool printerON;
+    bool printerConfigMode;
     bool configON;
+
 
 private:
     void connections();
