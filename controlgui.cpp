@@ -31,6 +31,8 @@ controlGUI::controlGUI(QWidget *parent) :
     prog05<<84<<3<<0<<5<<6;
     progVAC<<94<<0<<0<<0<<0;
     progPaso<<97<<5<<20<<3.5<<6;
+    ///provisional  cacudidad - ticket - temperatura
+    configPrinter<<3<<1<<4;
 
     progNum = 0;
     progNumNormal = 0;
@@ -45,7 +47,6 @@ controlGUI::controlGUI(QWidget *parent) :
     printerON = false;
     configON=false; //entrar a pantalla modo configuracion
     setPrinter=false; //activar impresora
-//    printerConfigMode =false; // modo de configuracion impresora
 
     mostrarLCD("todo",false);
     mostrarBoton("todo",false);
@@ -53,7 +54,7 @@ controlGUI::controlGUI(QWidget *parent) :
     horasOil = (QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(3)).toInt();
     modeloNum = (QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(1)).toInt(); if(modeloNum==0){modeloNum=1;}
     int incrMbarInicial =(QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).right(2)).toInt();
-    mbarActual = 960+ incrMbarInicial;
+    mbarActual = 955+ incrMbarInicial;
     ui->valor_mbar->setNum(mbarActual);
 
     connections();
@@ -469,10 +470,10 @@ void controlGUI::set_config(){
         else if(!printerON){ui->icon_printer->setVisible(false);}
         tipoProg=tipoProg_anterior;
         configON=false;
-//        printerConfigMode=false;
+        intoPrinterConfig=false;
         LCDparpadear->stop();
         botonParpadear->stop();
-        ui->boton_conf->setVisible(true);
+        //        ui->boton_conf->setVisible(true);
     }
 }
 void controlGUI::set_prog(){
@@ -727,27 +728,64 @@ void controlGUI::set_ok(){
         if(!printerON){
             if(setPrinter==false){
                 printerON=false;
+                qDebug()<<"texto principal :"<<ui->valor_central->text();
+                if(ui->valor_central->text()=="--"){ ///desactivar impresora
+                    intoPrinterConfig = false;
+                    ui->boton_conf->click();
+                }
                 ui->icon_caducidad->setVisible(printerON);
                 ui->icon_temperatura->setVisible(printerON);
                 ui->icon_ticket->setVisible(printerON);
             }
             else if(setPrinter==true){
-                if(estado=="setPrinter" ){ ///activar impresora si esta desactiva                          && printerConfigMode==false
+                if(estado=="setPrinter" ){ ///activar impresora si esta desactiva
                     printerON=true;
-//                    printerConfigMode = true;
                     ui->icon_caducidad->setVisible(printerON);
                     ui->icon_temperatura->setVisible(printerON);
                     ui->icon_ticket->setVisible(printerON);
+//                    estado="setCaducidad";
+                    updateGestionSistema(estado,"menos");
                 }
             }
         }
         else if(printerON){
-            if(estado =="setPrinter" ){ ///entrar a activar o desactivar impresora                              && printerConfigMode==true
+            if(estado =="setPrinter" ){ ///entrar a menu de activar o desactivar impresora
                 printerON=false;
 
                 ui->icon_caducidad->setVisible(false);
                 ui->icon_temperatura->setVisible(false);
                 ui->icon_ticket->setVisible(false);
+                qDebug()<<"texto principal :"<<ui->valor_central->text();
+            }
+            else if((estado=="setCaducidad" || estado=="setTicket" || estado =="setTemperatura") && intoPrinterConfig==false){ ///entrar en modo configuracion parametro
+                intoPrinterConfig = true;  ///Activar modo configuracion
+                LCDparpadear->stop();
+                if(estado=="setCaducidad"){
+                    ui->icon_caducidad->setVisible(true);
+                    ui->icon_temperatura->setVisible(false);
+                    ui->icon_ticket->setVisible(false);
+                    ui->icon_printer->setVisible(false);
+                }
+                else if(estado=="setTicket"){
+                    ui->icon_caducidad->setVisible(false);
+                    ui->icon_temperatura->setVisible(false);
+                    ui->icon_ticket->setVisible(true);
+                    ui->icon_printer->setVisible(false);
+                }
+                else if(estado=="setTemperatura"){
+                    ui->icon_caducidad->setVisible(false);
+                    ui->icon_temperatura->setVisible(true);
+                    ui->icon_ticket->setVisible(false);
+                    ui->icon_printer->setVisible(false);
+                }
+            }
+            else if((estado=="setCaducidad" || estado=="setTicket" || estado =="setTemperatura") && intoPrinterConfig==true){ ///salir modo configuracion
+                intoPrinterConfig=false;
+                LCDparpadear->start(400);
+                ui->icon_caducidad->setVisible(true);
+                ui->icon_temperatura->setVisible(true);
+                ui->icon_ticket->setVisible(true);
+                ui->icon_printer->setVisible(true);
             }
         }
         qDebug()<<"-->estado:"<<estado<<"  printerON:"<<printerON;
@@ -1611,33 +1649,29 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
             ui->icon_temperatura->setVisible(printerON);
             ui->icon_ticket->setVisible(printerON);
         }
-        else if(printerON){
+        else if(printerON){ ///si esta encendida
             qDebug()<<"configuracion de impresora activada:"<<printerON;
-            estado="setCaducidad";
-            ui->valor_nombre->setText("25.02.2015");
-            ui->valor_central->setNum(5);
+            estado = "setPrinter";
+            updateGestionSistema(estado,"menos");
             LCDparpadear->start(400);
-            //                ui->icon_caducidad->setVisible(printerON);
-            //                ui->icon_temperatura->setVisible(printerON);
-            //                ui->icon_ticket->setVisible(printerON);
         }
     }
     ///elegir opciones de configuracion
     else if((configON) && (accion=="mas"|| accion=="menos")){
         //l_estado=="setCaducidad" || l_estado=="setTicket" || l_estado=="setTemperatura"
-        if(printerON==true){ ///con impresora
+        if(printerON==true && intoPrinterConfig==false){ ///con impresora, navegacion por el menu config
             if(accion=="menos"){
                 if(l_estado=="setCaducidad"){
                     ui->icon_caducidad->setVisible(true);
                     estado="setTicket";
                     ui->valor_nombre->setText("ticket");
-                    ui->valor_central->setNum(1);
+                    ui->valor_central->setNum(configPrinter[1]);
                 }
                 else if(l_estado=="setTicket"){
                     ui->icon_ticket->setVisible(true);
                     estado="setTemperatura";
                     ui->valor_nombre->setText("temp ºC");
-                    ui->valor_central->setNum(5);
+                    ui->valor_central->setNum(configPrinter[2]);
                 }
                 else if(l_estado=="setTemperatura"){
                     ui->icon_temperatura->setVisible(true);
@@ -1648,8 +1682,11 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 else if(l_estado=="setPrinter"){
                     ui->icon_printer->setVisible(true);
                     estado="setCaducidad";
-                    ui->valor_nombre->setText("25.02.2015");
-                    ui->valor_central->setNum(5);
+                    ui->valor_central->setNum(configPrinter[0]);
+                    QString _fechaCad;
+                    if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
+                    else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
+                    ui->valor_nombre->setText(_fechaCad);
                 }
             }
             else if(accion=="mas"){
@@ -1663,24 +1700,67 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                     ui->icon_printer->setVisible(true);
                     estado="setTemperatura";
                     ui->valor_nombre->setText("temp ºC");
-                    ui->valor_central->setNum(5);
+                    ui->valor_central->setNum(configPrinter[2]);
                 }
                 else if(l_estado=="setTemperatura"){
                     ui->icon_temperatura->setVisible(true);
                     estado="setTicket";
                     ui->valor_nombre->setText("ticket");
-                    ui->valor_central->setNum(1);
+                    ui->valor_central->setNum(configPrinter[1]);
                 }
                 else if(l_estado=="setTicket"){
                     ui->icon_ticket->setVisible(true);
                     estado="setCaducidad";
-                    ui->valor_nombre->setText("25.02.2015");
-                    ui->valor_central->setNum(5);
+                    ui->valor_nombre->setText("03.02.2015");
+                    ui->valor_central->setNum(configPrinter[0]);
                 }
             }
-            qDebug()<<"cambiar de:"<<l_estado<<" a:"<<estado<<"\t:variable estado";
+//            qDebug()<<"cambiar de:"<<l_estado<<" a:"<<estado<<"\t:variable estado";
         }
-        if(printerON==false){ ///sin impresora
+        if(printerON==true && intoPrinterConfig==true){
+            if(estado=="setCaducidad"){ /// modificar dias de caducidad con su fecha correspondiente
+                if(accion=="mas"){
+                    configPrinter[0] = configPrinter[0] +1;
+                }
+                else if(accion=="menos"){
+                    configPrinter[0] = configPrinter[0] -1;
+                    if(configPrinter[0]<=0){
+                        configPrinter[0]=0;
+                    }
+                    ui->valor_central->setNum(configPrinter[0]);
+                }
+                //Mostrar valores en pantalla
+                ui->valor_central->setNum(configPrinter[0]);
+                QString _fechaCad;
+                if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
+                else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
+                ui->valor_nombre->setText(_fechaCad);
+            }
+            else if(estado=="setTicket"){
+                if(accion=="mas"){
+                    configPrinter[1] = configPrinter[1] + 1;
+                }
+                else if(accion=="menos"){
+                    configPrinter[1]= configPrinter[1] - 1;
+                    if(configPrinter[1]<=1){
+                        configPrinter[1]=1;
+                    }
+                }
+                //Mostrar valores en pantalla
+                ui->valor_central->setNum(configPrinter[1]);
+            }
+            else if(estado=="setTemperatura"){
+                if(accion=="mas"){
+                    configPrinter[2] = configPrinter[2] + 1;
+                }
+                else if(accion=="menos"){
+                    configPrinter[2]= configPrinter[2] - 1;
+                }
+                //Mostrar valores en pantalla
+                ui->valor_central->setNum(configPrinter[2]);
+            }
+        }
+        else if(printerON==false){ ///sin impresora
             if(accion=="menos"){
                 ui->valor_central->setText("--");
                 setPrinter=false;

@@ -44,6 +44,7 @@ private:
     QList<float> prog05;
     QList<float> progVAC;
     QList<float> progPaso;
+    QList<int> configPrinter; ///provisional
     bool encendido;
     bool encendido2;
     bool enPausa;
@@ -63,7 +64,7 @@ private:
     int incr_mbarAire;
     bool desdeOtroSET;
     bool printerON;
-    bool printerConfigMode;
+    bool intoPrinterConfig;
     bool configON;
 
 

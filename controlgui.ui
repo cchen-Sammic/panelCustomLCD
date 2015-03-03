@@ -262,7 +262,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/icono/imagen/panelUsuario.png);</string>
+     <string notr="true">background-image: url(:/background/imagen/panelUsuario - mejorado.png);</string>
     </property>
     <property name="text">
      <string/>
@@ -451,7 +451,7 @@
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>20.02.2015</string>
+     <string>01.03.2015</string>
     </property>
     <property name="scaledContents">
      <bool>false</bool>
@@ -792,7 +792,7 @@
     <property name="geometry">
      <rect>
       <x>232</x>
-      <y>130</y>
+      <y>129</y>
       <width>60</width>
       <height>54</height>
      </rect>
@@ -813,10 +813,13 @@
     </property>
    </widget>
    <widget class="QPushButton" name="boton_conf">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>232</x>
-      <y>197</y>
+      <y>196</y>
       <width>60</width>
       <height>54</height>
      </rect>
@@ -843,7 +846,7 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>265</y>
+      <y>263</y>
       <width>65</width>
       <height>50</height>
      </rect>
@@ -889,7 +892,7 @@
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>199</y>
+      <y>197</y>
       <width>62</width>
       <height>54</height>
      </rect>
@@ -912,7 +915,7 @@
     <property name="geometry">
      <rect>
       <x>689</x>
-      <y>268</y>
+      <y>266</y>
       <width>60</width>
       <height>54</height>
      </rect>
@@ -934,8 +937,8 @@
    <widget class="QPushButton" name="boton_vac">
     <property name="geometry">
      <rect>
-      <x>331</x>
-      <y>335</y>
+      <x>333</x>
+      <y>336</y>
       <width>57</width>
       <height>44</height>
      </rect>
@@ -957,8 +960,8 @@
    <widget class="QPushButton" name="boton_vacPlus">
     <property name="geometry">
      <rect>
-      <x>398</x>
-      <y>335</y>
+      <x>399</x>
+      <y>336</y>
       <width>57</width>
       <height>42</height>
      </rect>
@@ -980,8 +983,8 @@
    <widget class="QPushButton" name="boton_gas">
     <property name="geometry">
      <rect>
-      <x>464</x>
-      <y>335</y>
+      <x>465</x>
+      <y>336</y>
       <width>57</width>
       <height>44</height>
      </rect>
@@ -1003,8 +1006,8 @@
    <widget class="QPushButton" name="boton_sellar">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>335</y>
+      <x>531</x>
+      <y>336</y>
       <width>57</width>
       <height>44</height>
      </rect>
@@ -1026,8 +1029,8 @@
    <widget class="QPushButton" name="boton_aire">
     <property name="geometry">
      <rect>
-      <x>596</x>
-      <y>335</y>
+      <x>598</x>
+      <y>336</y>
       <width>57</width>
       <height>44</height>
      </rect>
@@ -1173,7 +1176,7 @@
      <x>0</x>
      <y>0</y>
      <width>1048</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

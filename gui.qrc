@@ -40,4 +40,8 @@
         <file>imagen/envasadora abiertaON.png</file>
         <file>imagen/envasadora cerrado.png</file>
     </qresource>
+    <qresource prefix="/background">
+        <file>imagen/panelUsuario - mejorado.png</file>
+        <file>imagen/panelUsuario.png</file>
+    </qresource>
 </RCC>
