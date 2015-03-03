@@ -752,6 +752,7 @@ void controlGUI::set_ok(){
             if(estado =="setPrinter" ){ ///entrar a menu de activar o desactivar impresora
                 printerON=false;
 
+                ui->icon_printer->setVisible(true);
                 ui->icon_caducidad->setVisible(false);
                 ui->icon_temperatura->setVisible(false);
                 ui->icon_ticket->setVisible(false);
@@ -759,7 +760,7 @@ void controlGUI::set_ok(){
             }
             else if((estado=="setCaducidad" || estado=="setTicket" || estado =="setTemperatura") && intoPrinterConfig==false){ ///entrar en modo configuracion parametro
                 intoPrinterConfig = true;  ///Activar modo configuracion
-                LCDparpadear->stop();
+//                LCDparpadear->stop();
                 if(estado=="setCaducidad"){
                     ui->icon_caducidad->setVisible(true);
                     ui->icon_temperatura->setVisible(false);
@@ -781,11 +782,14 @@ void controlGUI::set_ok(){
             }
             else if((estado=="setCaducidad" || estado=="setTicket" || estado =="setTemperatura") && intoPrinterConfig==true){ ///salir modo configuracion
                 intoPrinterConfig=false;
-                LCDparpadear->start(400);
+                ui->valor_central->setVisible(true);
+//                LCDparpadear->start(400);
+//                if(estado=="setTemperatura"){estado="setPrinter";}
                 ui->icon_caducidad->setVisible(true);
                 ui->icon_temperatura->setVisible(true);
                 ui->icon_ticket->setVisible(true);
                 ui->icon_printer->setVisible(true);
+                updateGestionSistema(estado,"menos");
             }
         }
         qDebug()<<"-->estado:"<<estado<<"  printerON:"<<printerON;
@@ -1652,7 +1656,8 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
         else if(printerON){ ///si esta encendida
             qDebug()<<"configuracion de impresora activada:"<<printerON;
             estado = "setPrinter";
-            updateGestionSistema(estado,"menos");
+            ui->valor_central->setText("on");
+//            updateGestionSistema(estado,"menos");
             LCDparpadear->start(400);
         }
     }
@@ -1785,10 +1790,20 @@ void controlGUI::updateParpadearBoton(){
 void controlGUI::updateParpadearLCD(){
     encendido2 =!encendido2;
     if(estado=="enVAC"){ui->valor_central->setVisible(encendido2);}
-    else if(estado=="setPrinter"){ui->icon_printer->setVisible(encendido2);}
-    else if(estado=="setCaducidad"){ui->icon_caducidad->setVisible(encendido2);}
-    else if(estado=="setTicket"){ui->icon_ticket->setVisible(encendido2);}
-    else if(estado=="setTemperatura"){ui->icon_temperatura->setVisible(encendido2);}
+    //    else if(estado=="setPrinter"){ui->icon_printer->setVisible(encendido2);}
+    //    else if(estado=="setCaducidad"){ui->icon_caducidad->setVisible(encendido2);}
+    //    else if(estado=="setTicket"){ui->icon_ticket->setVisible(encendido2);}
+    //    else if(estado=="setTemperatura"){ui->icon_temperatura->setVisible(encendido2);}
+
+    else if(estado=="setPrinter" && !intoPrinterConfig && printerON){ui->icon_printer->setVisible(encendido2);}
+    else if(estado=="setPrinter" && !intoPrinterConfig && !printerON){ui->valor_central->setVisible(encendido2);}
+    else if(estado=="setCaducidad" && !intoPrinterConfig){ui->icon_caducidad->setVisible(encendido2);}
+    else if(estado=="setTicket" && !intoPrinterConfig){ui->icon_ticket->setVisible(encendido2);}
+    else if(estado=="setTemperatura" && !intoPrinterConfig){ui->icon_temperatura->setVisible(encendido2);}
+    else if(estado=="setPrinter" && intoPrinterConfig){ui->valor_central->setVisible(encendido2);}
+    else if(estado=="setCaducidad" && intoPrinterConfig){ui->valor_central->setVisible(encendido2);}
+    else if(estado=="setTicket" && intoPrinterConfig){ui->valor_central->setVisible(encendido2);}
+    else if(estado=="setTemperatura" && intoPrinterConfig){ui->valor_central->setVisible(encendido2);}
 }
 
 QString controlGUI ::mostrarProgCentral(QString valor){
