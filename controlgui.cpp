@@ -766,18 +766,21 @@ void controlGUI::set_ok(){
                     ui->icon_temperatura->setVisible(false);
                     ui->icon_ticket->setVisible(false);
                     ui->icon_printer->setVisible(false);
+                    ui->valor_central->setVisible(true);
                 }
                 else if(estado=="setTicket"){
                     ui->icon_caducidad->setVisible(false);
                     ui->icon_temperatura->setVisible(false);
                     ui->icon_ticket->setVisible(true);
                     ui->icon_printer->setVisible(false);
+                    ui->valor_central->setVisible(true);
                 }
                 else if(estado=="setTemperatura"){
                     ui->icon_caducidad->setVisible(false);
                     ui->icon_temperatura->setVisible(true);
                     ui->icon_ticket->setVisible(false);
                     ui->icon_printer->setVisible(false);
+                    ui->valor_central->setVisible(true);
                 }
             }
             else if((estado=="setCaducidad" || estado=="setTicket" || estado =="setTemperatura") && intoPrinterConfig==true){ ///salir modo configuracion
@@ -789,6 +792,7 @@ void controlGUI::set_ok(){
                 ui->icon_temperatura->setVisible(true);
                 ui->icon_ticket->setVisible(true);
                 ui->icon_printer->setVisible(true);
+                ui->valor_central->setVisible(true);
                 updateGestionSistema(estado,"menos");
             }
         }
@@ -1688,10 +1692,11 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                     ui->icon_printer->setVisible(true);
                     estado="setCaducidad";
                     ui->valor_central->setNum(configPrinter[0]);
-                    QString _fechaCad;
-                    if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
-                    else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
-                    ui->valor_nombre->setText(_fechaCad);
+//                    QString _fechaCad;
+//                    if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
+//                    else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
+//                    ui->valor_nombre->setText(_fechaCad);
+                    ui->valor_nombre->setText("dia");
                 }
             }
             else if(accion=="mas"){
@@ -1736,10 +1741,11 @@ void controlGUI::updateGestionSistema(QString l_estado, QString accion){
                 }
                 //Mostrar valores en pantalla
                 ui->valor_central->setNum(configPrinter[0]);
-                QString _fechaCad;
-                if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
-                else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
-                ui->valor_nombre->setText(_fechaCad);
+//                QString _fechaCad;
+//                if(configPrinter[0]<=9){ _fechaCad = QString("0%1.03.2015").arg(configPrinter[0]);}
+//                else if(configPrinter[0]>9){ _fechaCad = QString("%1.03.2015").arg(configPrinter[0]);}
+//                ui->valor_nombre->setText(_fechaCad);
+                ui->valor_nombre->setText("dia");
             }
             else if(estado=="setTicket"){
                 if(accion=="mas"){
